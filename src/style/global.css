@@ -1,0 +1,17 @@
+.main .screening-form{
+  margin-top:20px;
+}
+.main .screening-form .el-input input{
+  width:240px;
+}
+.main .screening-form .el-date-editor{
+  width:240px;
+}
+
+.main .table-container{
+  margin-top:20px;
+}
+.main .table-container .search-input{
+  float:right;
+  width:200px;
+}
