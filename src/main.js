@@ -10,6 +10,14 @@ Vue.use(ElementUI,{ size: 'small' })
 
 Vue.config.productionTip = false
 
+router.beforeEach((to, from, next) => {
+  if (to.path == '/') {
+    next({ path: '/index' })
+  }else{
+    next()
+  }
+})
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

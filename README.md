@@ -1,4 +1,4 @@
-# core-crm
+# CCRMS
 
 > A Vue.js project
 
