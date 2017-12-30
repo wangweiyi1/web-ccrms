@@ -1,3 +1,6 @@
+body, h1, h2, h3, ul, dl, dd, p {
+  margin: 0;
+}
 .main .screening-form{
   margin-top:20px;
 }
@@ -14,4 +17,21 @@
 .main .table-container .search-input{
   float:right;
   width:200px;
+}
+.el-card .el-card__header{
+  padding:10px;
+}
+.el-card .card-header-custom{
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.el-card .card-header-custom .card-icon{
+  position:absolute;
+  right:0;
+  font-size:25px;
+  cursor: pointer;
+}
+.click-icon{
+  cursor: pointer;
 }
