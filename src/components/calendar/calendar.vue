@@ -27,11 +27,11 @@
           <!--本月-->
           <span v-if="day.getMonth()+1 != currentMonth" class="other-month">{{ day.getDate() }}</span>
           <span v-else>
-              <!--今天-->
-              <span v-if="day.getFullYear() == new Date().getFullYear() && day.getMonth() == new Date().getMonth() && day.getDate() == new Date().getDate()"
-                    class="active">{{ day.getDate() }}</span>
-              <span :class="[meetingDate[currentYear + '-' + currentMonth + '-' + day.getDate()] ? 'meeting' : '']" v-else>{{ day.getDate() }}</span>
-            </span>
+            <!--今天-->
+            <span v-if="day.getFullYear() == new Date().getFullYear() && day.getMonth() == new Date().getMonth() && day.getDate() == new Date().getDate()"
+                  :class="[meetingDate.indexOf(currentYear + '-' + currentMonth + '-' + day.getDate()) != -1 ? 'meeting today' : 'today']">{{ day.getDate() }}</span>
+            <span :class="[meetingDate.indexOf(currentYear + '-' + currentMonth + '-' + day.getDate()) != -1 ? 'meeting' : '']" v-else>{{ day.getDate() }}</span>
+          </span>
         </li>
       </ul>
     </div>
@@ -41,10 +41,11 @@
   export default {
     name: 'calendar',
     props: {
-      meetingDate: Object
+      meetingData: Array
     },
     data() {
       return {
+        meetingDate:[],
         currentDay: 1,
         currentMonth: 1,
         currentYear: 1970,
@@ -52,7 +53,18 @@
         days: [],
       };
     },
+    watch:{
+      meetingData:function(val,val2){
+        this.initMeetingDate(val2);
+      }
+    },
     methods: {
+      initMeetingDate:function(data){
+        this.meetingDate = [];
+        for(var i=0;i<data.length;i++){
+          this.meetingDate.push(data[i].date);
+        }
+      },
       initData: function(cur) {
         var date;
         if (cur) {
@@ -83,7 +95,8 @@
       },
       pick: function(date) {
         //点击天
-        this.$emit('click-day',date);
+        var day = this.formatDate( date.getFullYear() , date.getMonth() + 1, date.getDate());
+        this.$emit('click-day',day);
 //        alert(this.formatDate( date.getFullYear() , date.getMonth() + 1, date.getDate()));
       },
       pickPre: function(year, month) {
@@ -108,19 +121,20 @@
       formatDate: function(year,month,day){
         var y = year;
         var m = month;
-        if(m<10) m = "0" + m;
+        if(m<10) m = m;
         var d = day;
-        if(d<10) d = "0" + d;
+        if(d<10) d = d;
         return y+"-"+m+"-"+d
       },
     },
     created: function() {
       this.initData(null);
+      this.initMeetingDate(this.meetingData);
       this.pickNext(this.currentYear,this.currentMonth);
       this.pickPre(this.currentYear,this.currentMonth);
     },
     mounted(){
-      console.log(this.meetingDate);
+//      console.log(this.meetingDate);
     }
   }
 </script>
@@ -228,7 +242,7 @@
     cursor: pointer;
   }
 
-  .days li .active {
+  .days li .today {
     padding: 6px 10px;
     border-radius: 50%;
     background: #00B8EC;

@@ -7,29 +7,32 @@
           <el-breadcrumb-item>客户管理</el-breadcrumb-item>
         </el-breadcrumb>
         <el-form class="screening-form" label-width="100px" :model="form">
-          <el-col :span="12">
-            <el-form-item label="名称">
-              <el-input></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="客户类型">
-              <el-select v-model="form.type" placeholder="请选择">
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="加入时间">
-              <el-date-picker v-model="form.date" type="daterange">
-              </el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col :span="24">
-            <el-form-item>
-              <el-button type="primary">查询</el-button>
-              <el-button>重置</el-button>
-            </el-form-item>
-          </el-col>
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="名称">
+                <el-input></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="客户类型">
+                <el-select v-model="form.type" placeholder="请选择">
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="加入时间">
+                <el-date-picker v-model="form.date" type="daterange">
+                </el-date-picker>
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item>
+                <el-button type="primary">查询</el-button>
+                <el-button>重置</el-button>
+              </el-form-item>
+            </el-col>
+            <div style="clear:both;"></div>
+          </el-row>
         </el-form>
       </el-card>
     </el-col>

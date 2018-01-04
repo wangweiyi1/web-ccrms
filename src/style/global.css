@@ -35,3 +35,10 @@ body, h1, h2, h3, ul, dl, dd, p {
 .click-icon{
   cursor: pointer;
 }
+.lead{
+  font-size:14px;
+  line-height: 15px;
+  display: flex;
+  align-items: center;
+  padding:5px 0px;
+}

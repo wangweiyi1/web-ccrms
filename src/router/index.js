@@ -3,6 +3,7 @@ import Router from 'vue-router'
 
 import Home from '@/views/Home'
 import Index from '@/views/index/Index'
+import managementHome from '@/views/management/Home'
 import List from '@/views/management/list'
 
 Vue.use(Router)
@@ -15,7 +16,14 @@ export default new Router({
       component: Home,
       children:[
         {path:'/index',name:'index',component:Index},
-        {path:'/list',name:'list',component:List},
+        {
+          path:'/management',
+          name:'management',
+          component:managementHome,
+          children:[
+            {path:'/management/list',name:'list',component:List},
+          ],
+        },
       ]
     }
   ]
