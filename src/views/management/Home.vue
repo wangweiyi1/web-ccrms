@@ -1,5 +1,5 @@
 <template>
-  <el-row :gutter="20" style="position: relative;">
+  <el-row :gutter="20" style="position: relative;margin:-20px;">
     <div style="float: left;">
       <el-menu :default-active="$route.path" class="el-menu-vertical-demo">
         <el-menu-item index="/management/list">我的销售线索</el-menu-item>
@@ -31,11 +31,6 @@
   }
 </script>
 
-<style>
-  .main .content-wrapper{
-    padding:0px !important;
-  }
-</style>
 <style scoped>
   .el-menu-vertical-demo{
     width: 240px;

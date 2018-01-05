@@ -7,8 +7,8 @@
       <el-col :span="16">
         <el-menu :default-active="$route.path" router class="el-menu-demo" mode="horizontal">
           <el-menu-item index="/index">门户</el-menu-item>
-          <el-menu-item index="/list">资本管理</el-menu-item>
-          <el-menu-item index="3">报表中心</el-menu-item>
+          <el-menu-item index="/management/list">资本管理</el-menu-item>
+          <el-menu-item index="/report/list">报表中心</el-menu-item>
         </el-menu>
       </el-col>
       <el-col :span="4" class="user-config">
