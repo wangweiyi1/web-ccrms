@@ -1,7 +1,7 @@
 <template>
   <el-row :gutter="20" style="position: relative;margin:-20px;">
     <div style="float: left;">
-      <el-menu :default-active="$route.path" class="el-menu-vertical-demo">
+      <el-menu :default-active="$route.path" router class="el-menu-vertical-demo">
         <el-menu-item index="/management/list">我的销售线索</el-menu-item>
         <el-menu-item index="2">我的客户</el-menu-item>
         <el-menu-item index="/index">客户公司</el-menu-item>
@@ -37,10 +37,11 @@
     min-height: 1200px;
   }
   .content{
-    position: absolute;
-    width: 100%;
-    float: left;
-    padding: 20px;
-    margin-left: 240px;
+    /*position: absolute;*/
+    /*width: 100%;*/
+    /*float: left;*/
+    padding:20px;
+    z-index:0;
+    padding: 20px 20px 20px 260px;
   }
 </style>

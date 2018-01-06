@@ -6,7 +6,11 @@ import Index from '@/views/index/Index'
 import managementHome from '@/views/management/Home'
 import List from '@/views/management/list'
 import reportHome from '@/views/report/Home'
-import LreportLst from '@/views/report/list'
+import reportList from '@/views/report/list'
+import reportGeo from '@/views/report/geo'
+import reportMeeting from '@/views/report/meetingList'
+import reportFinancial from '@/views/report/financialList'
+import reportTrading from '@/views/report/tradingList'
 
 Vue.use(Router)
 
@@ -31,7 +35,11 @@ export default new Router({
           name:'report',
           component:reportHome,
           children:[
-            {path:'/report/list',name:'list',component:LreportLst},
+            {path:'/report/list',name:'report-list',component:reportList},
+            {path:'/report/geo',name:'geo',component:reportGeo},
+            {path:'/report/meeting-list',name:'meeting-list',component:reportMeeting},
+            {path:'/report/financial-list',name:'financial-list',component:reportFinancial},
+            {path:'/report/trading-list',name:'trading-list',component:reportTrading},
           ],
         },
       ]
