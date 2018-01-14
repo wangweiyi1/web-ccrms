@@ -89,7 +89,7 @@
     width: 100%;
     position: absolute;
     padding-bottom: 110px;
-    background:url("../assets/public/login-bg.png");
+    background:url("/src/assets/public/login-bg.png");
     background-size:cover;
   }
   .wrapper .login-logo{
@@ -119,9 +119,7 @@
   }
 
   .wrapper .login-form{
-
     margin: 0 auto;
-
   }
   .wrapper .login-form input{
     width:200px;
@@ -156,14 +154,6 @@
     background-color: #fefefe;
   }
 
-
-  /*.login-button{*/
-    /*display:inline-block;*/
-    /*width:35px;*/
-    /*height:35px;*/
-    /*cursor:pointer;*/
-    /*background:url("../images/public/login-buton.png") center no-repeat;*/
-  /*}*/
   .login-button #login{
     display:block;
     width:75px;
@@ -184,16 +174,6 @@
     border:1px solid #ff0000;
   }
 
-  /*.icon-delete-full{*/
-    /*display: inline-block;*/
-    /*width: 20px;*/
-    /*height: 20px;*/
-    /*vertical-align: middle;*/
-    /*margin: 0 5px;*/
-    /*background: url("../images/icon/icon-20-20.png");*/
-    /*background-position: -40px -39px;*/
-    /*cursor: pointer;*/
-  /*}*/
   .forget-wrapper{
     text-align:right;
     width:400px;

@@ -4,14 +4,16 @@
       <el-col :span="4" class="logo">
         <img src="../assets/logo.png" height="50" alt="">
       </el-col>
-      <el-col :span="16">
+      <el-col :span="14">
         <el-menu :default-active="$route.path" router class="el-menu-demo" mode="horizontal">
           <el-menu-item index="/index">门户</el-menu-item>
           <el-menu-item index="/management/list">资本管理</el-menu-item>
           <el-menu-item index="/report/list">报表中心</el-menu-item>
         </el-menu>
       </el-col>
-      <el-col :span="4" class="user-config">
+      <el-col :span="6" class="user-config">
+        <el-button type="text">新增订单</el-button>
+        <el-button type="text">新增交易</el-button>
         <img src="../assets/icon/user.svg" width="40" height="40" alt="">
       </el-col>
     </el-col>

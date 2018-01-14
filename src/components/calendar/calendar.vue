@@ -28,9 +28,11 @@
           <span v-if="day.getMonth()+1 != currentMonth" class="other-month">{{ day.getDate() }}</span>
           <span v-else>
             <!--今天-->
-            <span v-if="day.getFullYear() == new Date().getFullYear() && day.getMonth() == new Date().getMonth() && day.getDate() == new Date().getDate()"
-                  :class="[meetingDate.indexOf(currentYear + '-' + currentMonth + '-' + day.getDate()) != -1 ? 'meeting today' : 'today']">{{ day.getDate() }}</span>
-            <span :class="[meetingDate.indexOf(currentYear + '-' + currentMonth + '-' + day.getDate()) != -1 ? 'meeting' : '']" v-else>{{ day.getDate() }}</span>
+            <!--<span v-if="day.getFullYear() == new Date().getFullYear() && day.getMonth() == new Date().getMonth() && day.getDate() == new Date().getDate()"-->
+                  <!--:class="[meetingDate.indexOf(currentYear + '-' + currentMonth + '-' + day.getDate()) != -1 ? 'meeting today' : 'today']">{{ day.getDate() }}</span>-->
+            <span v-if="mainMeetingDate.indexOf(currentYear + '-' + currentMonth + '-' + day.getDate()) != -1" class="meeting-main">{{ day.getDate() }}</span>
+            <span v-else-if="branchMeetingDate.indexOf(currentYear + '-' + currentMonth + '-' + day.getDate()) != -1" class="meeting-branch">{{ day.getDate() }}</span>
+            <span v-else>{{ day.getDate() }}</span>
           </span>
         </li>
       </ul>
@@ -41,10 +43,12 @@
   export default {
     name: 'calendar',
     props: {
-      meetingData: Array
+      meetingData: Array,
     },
     data() {
       return {
+        mainMeetingDate:[],
+        branchMeetingDate:[],
         meetingDate:[],
         currentDay: 1,
         currentMonth: 1,
@@ -56,14 +60,21 @@
     watch:{
       meetingData:function(val,val2){
         this.initMeetingDate(val2);
-      }
+      },
     },
     methods: {
       initMeetingDate:function(data){
-        this.meetingDate = [];
+        this.mainMeetingDate = [];
+        this.branchMeetingDate = [];
         for(var i=0;i<data.length;i++){
-          this.meetingDate.push(data[i].date);
+          if(data[i].type == 'main'){
+            this.mainMeetingDate.push(data[i].date);
+          }else{
+            this.branchMeetingDate.push(data[i].date);
+          }
         }
+        console.log(data);
+        console.log(this.mainMeetingDate);
       },
       initData: function(cur) {
         var date;
@@ -191,7 +202,7 @@
   }
 
   .arrow {
-    padding: 20px 30px;
+    padding: 10px 30px;
   }
 
   .arrow:hover {
@@ -235,15 +246,15 @@
     display: inline-block;
     width: 14.2%;
     text-align: center;
-    padding-bottom: 20px;
-    padding-top: 20px;
+    padding-bottom: 10px;
+    padding-top: 10px;
     font-size: 1.3rem;
     color: #000;
     cursor: pointer;
   }
 
   .days li .today {
-    padding: 6px 10px;
+    padding: 6px 6px;
     border-radius: 50%;
     background: #00B8EC;
     color: #fff;
@@ -258,9 +269,14 @@
     background: #e1e1e1;
   }
 
-  .meeting{
+  .meeting-main{
     padding: 6px 10px;
     border-radius: 50%;
-    border:1px solid red;
+    border:1px solid #FF6666;
+  }
+  .meeting-branch{
+    padding: 6px 10px;
+    border-radius: 50%;
+    border:1px solid #99CC66;
   }
 </style>

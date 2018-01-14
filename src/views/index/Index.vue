@@ -47,28 +47,55 @@
       <!--新建会议弹窗-->
       <el-dialog title="新建会议" width="70%" :visible.sync="meetingDialog">
         <el-form label-width="120px">
+          <!--<el-form-item label="">-->
+            <!--<span class="lead">{{activeDate}}</span>-->
+          <!--</el-form-item>-->
           <el-form-item label="">
-            <span class="lead">{{activeDate}}</span>
+            <el-switch style="display: block" v-model="meetingForm.type"
+              active-color="#FFCC99" inactive-color="#0099CC"
+              active-text="日程" inactive-text="会议">
+            </el-switch>
           </el-form-item>
-          <el-form-item label="时间">
-            <el-time-select v-model="meetingTime"
-              :picker-options="{
-                  start: '08:00',
-                  step: '00:15',
-                  end: '20:30'
-              }" placeholder="选择时间">
-            </el-time-select>
-          </el-form-item>
-          <el-form-item label="会议纪要">
-            <el-input type="textarea" style="width:400px;" :rows="3"></el-input>
-          </el-form-item>
-          <el-form-item label="参会人员">
-            <template>
-              <el-transfer v-model="personnelValue" :data="personnel" filterable
-                           :titles="['可选客户','已选客户']">
-              </el-transfer>
-            </template>
-          </el-form-item>
+          <template v-if="!meetingForm.type">
+            <el-form-item label="时间">
+              <el-date-picker v-model="meetingTime" type="daterange" range-separator="-"
+                              start-placeholder="开始日期" end-placeholder="结束日期">
+              </el-date-picker>
+            </el-form-item>
+            <el-form-item label="课程名称">
+              <el-input style="width:200px;"></el-input>
+            </el-form-item>
+            <el-form-item label="开课地点">
+              <el-input style="width:200px;"></el-input>
+            </el-form-item>
+            <el-form-item label="负责人">
+              <el-input style="width:200px;"></el-input>
+            </el-form-item>
+            <el-form-item label="参会人员">
+              <template>
+                <el-transfer v-model="personnelValue" :data="personnel" filterable
+                             :titles="['可选客户','已选客户']">
+                </el-transfer>
+              </template>
+            </el-form-item>
+          </template>
+          <template v-else>
+            <el-form-item label="时间">
+              <el-date-picker v-model="activeDate" type="date"></el-date-picker>
+            </el-form-item>
+            <el-form-item label="拜访客户">
+              <template v-for="(visitor,index) in meetingForm.visitors">
+                <div v-if="index > 0" style="margin-top:10px;"></div>
+                <el-input v-model="visitor.name" style="width:200px;"></el-input>
+                时间
+                <el-time-select v-model="visitor.time" :picker-options="{start: '08:30',step: '00:15',end: '18:30'}" placeholder="选择时间">
+                </el-time-select>
+                <i class="el-icon-circle-plus click-icon" @click="meetingForm.visitors.push({name:'',time:''})"></i>
+                <i v-if="index > 0" class="el-icon-circle-close delete-icon" @click="meetingForm.visitors.splice(index,1)"></i>
+                <br>
+              </template>
+            </el-form-item>
+          </template>
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button @click="meetingDialog = false">取 消</el-button>
@@ -80,7 +107,7 @@
         <el-col :span="24">
           <el-card class="box-card custom-card" :body-style="{ padding: '0' }">
             <div slot="header" class="clearfix card-header-custom">
-              <h2>会议信息
+              <h2>日程安排
                 <i class="el-icon-circle-plus click-icon"></i>
               </h2>
               <!--<el-button icon="el-icon-circle-plus">添加会议</el-button>-->
@@ -88,8 +115,18 @@
               <i class="el-icon-arrow-left card-icon" v-show="!showCalendar" @click="showCalendar = true"></i>
             </div>
             <transition name="fade">
-              <calendar :meetingData="meetingData" v-show="showCalendar" @click-day="clickDay"></calendar>
+              <calendar style="width: 360px;float:left;" :meetingData="meetingData" v-show="showCalendar" @click-day="clickDay"></calendar>
             </transition>
+            <div class="meeting-container">
+              <div>
+                <div class="meeting-color main"></div>
+                <div class="meeting-text">总公司会议</div>
+              </div>
+              <div>
+                <div class="meeting-color branch"></div>
+                <div class="meeting-text">分公司会议</div>
+              </div>
+            </div>
           </el-card>
         </el-col>
         <el-col :span="24" class="table-container">
@@ -98,7 +135,7 @@
               <i class="el-icon-circle-plus click-icon" @click="createClues = true"></i>
             </h2>
             <el-input class="search-input" placeholder="请输入客户姓名" size="mini" suffix-icon="el-icon-search"></el-input>
-            <el-table :data="cluesData" highlight-current-row height="200" style="width: 100%;margin-top:10px;">
+            <el-table :data="cluesData" highlight-current-row height="320" style="width: 100%;margin-top:10px;">
               <el-table-column prop="name" label="姓名">
               </el-table-column>
               <el-table-column prop="phone" label="电话号">
@@ -107,87 +144,82 @@
               </el-table-column>
               <el-table-column label="">
                 <template slot-scope="scope">
-                  <el-button size="mini" @click="on=false">查看详情</el-button>
+                  <el-button size="mini" @click="on=false">跟进详情</el-button>
                 </template>
               </el-table-column>
             </el-table>
+            <el-pagination class="pagination" small :current-page="1" :page-sizes="[10, 20, 50, 100]"
+              :page-size="10" layout="sizes, prev, pager, next" :total="1000">
+            </el-pagination>
           </el-card>
         </el-col>
       </el-col>
-      <!--<el-button @click="on=!on"></el-button>-->
       <el-col :span="14" style="position: relative;">
-        <!--<div class="in-out-translate-demo-wrapper">-->
-          <transition name="in-out-translate-fade" mode="out-in">
-            <el-card v-if="on" key="on" class="box-card custom-card" :body-style="{ position: 'relative' , paddingTop:'10px' }">
-              <h2>
-                会议纪要
-                <i class="el-icon-edit" style="cursor: pointer;"></i>
-              </h2>
-              <span class="lead">
-                <img src="../../assets/icon/time.svg" width="15"/>&nbsp;2018-1-1 10:00<br>
-              </span>
-              <span class="lead">
-                被长辈看见打PUBG是一种什么样的体验?
-              </span>
-              <h2>参与客户列表
-                <!--<i class="el-icon-circle-plus click-icon" @click="customerDialog = true"></i>-->
-              </h2>
-              <el-row :gutter="20">
-                <!--<transition-group name="list" tag="p">-->
-                  <template v-for="(item, index) in tableData">
-                    <el-col :span="12" style="margin-top:10px;" :key="index">
-                      <el-card class="select-card" :body-style="{ padding: '0px' , position: 'relative' }">
-                        <img src="../../assets/icon/unknow-user.svg" class="image-right">
-                        <div style="padding: 10px;margin-left:100px;">
-                          <span>{{item.name}}</span>
-                          <div class="bottom clearfix">
-                            <div class="detail">
-                              <img src="../../assets/icon/phone.svg" class="iconImage">{{item.phone}}
-                            </div>
-                            <div class="detail">
-                              <img src="../../assets/icon/level.svg" class="iconImage">{{item.level}}
-                            </div>
-                            <div class="detail">
-                              <img src="../../assets/icon/num.svg" class="iconImage">{{item.meetings}}
-                            </div>
-                            <el-button type="text" icon="el-icon-delete" class="button" @click="tableData.splice(index,1)"></el-button>
-                          </div>
+        <transition name="in-out-translate-fade" mode="out-in">
+          <el-card v-if="on" key="on" class="box-card custom-card" :body-style="{ position: 'relative' , paddingTop:'10px' }">
+            <h2>
+              会议安排
+              <i class="el-icon-edit" style="cursor: pointer;"></i>
+            </h2>
+            <span class="lead">
+              <img src="../../assets/icon/time.svg" width="15"/>&nbsp;2018-1-1 10:00<br>
+            </span>
+            <span class="lead">
+              被长辈看见打PUBG是一种什么样的体验?
+            </span>
+            <h2>参与客户列表
+              <i class="el-icon-circle-plus click-icon" @click="customerDialog = true"></i>
+            </h2>
+            <el-row :gutter="20">
+              <template v-for="(item, index) in tableData">
+                <el-col :span="12" style="margin-top:10px;" :key="index">
+                  <el-card class="select-card" :body-style="{ padding: '0px' , position: 'relative' }">
+                    <img src="../../assets/icon/unknow-user.svg" class="image-right">
+                    <div style="padding: 10px;margin-left:100px;">
+                      <span>{{item.name}}</span>
+                      <div class="bottom clearfix">
+                        <div class="detail">
+                          <img src="../../assets/icon/phone.svg" class="iconImage">{{item.phone}}
                         </div>
-                      </el-card>
-                    </el-col>
-                  </template>
-                <!--</transition-group>-->
-                <el-col :span="12" style="margin-top:10px;height:112px;display: flex;align-items: center;">
-                  <i class="el-icon-circle-plus-outline add-button"></i>
+                        <div class="detail">
+                          <img src="../../assets/icon/level.svg" class="iconImage">{{item.level}}
+                        </div>
+                        <div class="detail">
+                          <img src="../../assets/icon/num.svg" class="iconImage">{{item.meetings}}
+                        </div>
+                        <el-button type="text" icon="el-icon-delete" class="button" @click="tableData.splice(index,1)"></el-button>
+                      </div>
+                    </div>
+                  </el-card>
                 </el-col>
-              </el-row>
-            </el-card>
-            <el-card  v-else key="off" class="box-card custom-card" :body-style="{ position: 'relative' }">
-              <Timeline pending>
-                <TimelineItem>
-                  <p class="time">1976年</p>
-                  <p class="content">Apple I 问世</p>
-                </TimelineItem>
-                <TimelineItem>
-                  <p class="time">1984年</p>
-                  <p class="content">发布 Macintosh</p>
-                </TimelineItem>
-                <TimelineItem>
-                  <p class="time">2007年</p>
-                  <p class="content">发布 iPhone</p>
-                </TimelineItem>
-                <TimelineItem>
-                  <p class="time">2010年</p>
-                  <p class="content">发布 iPad</p>
-                </TimelineItem>
-                <TimelineItem>
-                  <p class="time">2011年10月5日</p>
-                  <p class="content">史蒂夫·乔布斯去世</p>
-                </TimelineItem>
-              </Timeline>
-            </el-card>
-          </transition>
-        <!--</div>-->
+              </template>
+            </el-row>
+          </el-card>
+          <el-card  v-else key="off" class="box-card custom-card" :body-style="{ position: 'relative' }">
+            <Timeline pending>
+              <TimelineItem>
+                <p class="time">1976年</p>
+                <p class="content">Apple I 问世</p>
+              </TimelineItem>
+              <TimelineItem>
+                <p class="time">1984年</p>
+                <p class="content">发布 Macintosh</p>
+              </TimelineItem>
+              <TimelineItem>
+                <p class="time">2007年</p>
+                <p class="content">发布 iPhone</p>
+              </TimelineItem>
+              <TimelineItem>
+                <p class="time">2010年</p>
+                <p class="content">发布 iPad</p>
+              </TimelineItem>
+              <TimelineItem>
+                <p class="time">2011年10月5日</p>
+                <p class="content">史蒂夫·乔布斯去世</p>
+              </TimelineItem>
+            </Timeline>
+          </el-card>
+        </transition>
       </el-col>
     </el-row>
 </template>
@@ -210,6 +242,16 @@
         customerType:"",
         personnel:Personnel,
         personnelValue:[],
+        activeMeeting:{
+          date:"",
+          detail:"",
+        },
+        meetingForm:{
+          type:false,
+          visitors:[
+            {name:"",time:""},
+          ],
+        },
         options: [
           {value: '选项1', label: '全款会员'},
           {value: '选项2', label: '期费会员'},
@@ -221,11 +263,13 @@
         meetingData:[
           {
             date:"2018-1-1",
-            detail:"会议详情"
+            detail:"会议详情",
+            type:"main",
           },
           {
             date:"2018-1-2",
-            detail:"会议详情"
+            detail:"会议详情",
+            type:"branch",
           },
         ],
         cluesData:[
@@ -401,6 +445,34 @@
 </script>
 
 <style scoped>
+  .meeting-container{
+    padding-top:50px;
+    margin-left:360px;
+  }
+  .meeting-container>div{
+    margin-top:10px;
+  }
+  .meeting-container .meeting-color{
+    float:left;
+    margin-left:15px;
+    width:30px;
+    height:20px;
+    border-radius:5px;
+  }
+  .meeting-container .main{
+    background-color: #FF6666;
+  }
+  .meeting-container .branch{
+    background-color: #99CC66;
+  }
+  .meeting-container .meeting-text{
+    margin-left:50px;
+  }
+  .pagination{
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+  }
   .add-button{
     font-size:80px;
     cursor: pointer;
@@ -411,6 +483,10 @@
   }
   .click-icon{
     color: #00B8EC;
+  }
+  .delete-icon{
+    color: #FF6666;
+    cursor: pointer;
   }
   .search-input{
     position:absolute;
