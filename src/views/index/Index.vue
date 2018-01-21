@@ -62,6 +62,12 @@
                               start-placeholder="开始日期" end-placeholder="结束日期">
               </el-date-picker>
             </el-form-item>
+            <el-form-item label="会议类型">
+              <el-radio-group v-model="meetingForm.meetingType">
+                <el-radio label="main">总公司会议</el-radio>
+                <el-radio label="branch">分公司会议</el-radio>
+              </el-radio-group>
+            </el-form-item>
             <el-form-item label="课程名称">
               <el-input style="width:200px;"></el-input>
             </el-form-item>
@@ -158,7 +164,7 @@
         <transition name="in-out-translate-fade" mode="out-in">
           <el-card v-if="on" key="on" class="box-card custom-card" :body-style="{ position: 'relative' , paddingTop:'10px' }">
             <h2>
-              会议安排
+              会议安排 {{activeMeetingDate}}
               <i class="el-icon-edit" style="cursor: pointer;"></i>
             </h2>
             <span class="lead">
@@ -196,28 +202,89 @@
             </el-row>
           </el-card>
           <el-card  v-else key="off" class="box-card custom-card" :body-style="{ position: 'relative' }">
-            <Timeline pending>
-              <TimelineItem>
-                <p class="time">1976年</p>
-                <p class="content">Apple I 问世</p>
-              </TimelineItem>
-              <TimelineItem>
-                <p class="time">1984年</p>
-                <p class="content">发布 Macintosh</p>
-              </TimelineItem>
-              <TimelineItem>
-                <p class="time">2007年</p>
-                <p class="content">发布 iPhone</p>
-              </TimelineItem>
-              <TimelineItem>
-                <p class="time">2010年</p>
-                <p class="content">发布 iPad</p>
-              </TimelineItem>
-              <TimelineItem>
-                <p class="time">2011年10月5日</p>
-                <p class="content">史蒂夫·乔布斯去世</p>
-              </TimelineItem>
-            </Timeline>
+            <!--<Timeline pending>-->
+              <!--<TimelineItem>-->
+                <!--<p class="time">1976年</p>-->
+                <!--<p class="content">Apple I 问世</p>-->
+              <!--</TimelineItem>-->
+              <!--<TimelineItem>-->
+                <!--<p class="time">1984年</p>-->
+                <!--<p class="content">发布 Macintosh</p>-->
+              <!--</TimelineItem>-->
+              <!--<TimelineItem>-->
+                <!--<p class="time">2007年</p>-->
+                <!--<p class="content">发布 iPhone</p>-->
+              <!--</TimelineItem>-->
+              <!--<TimelineItem>-->
+                <!--<p class="time">2010年</p>-->
+                <!--<p class="content">发布 iPad</p>-->
+              <!--</TimelineItem>-->
+              <!--<TimelineItem>-->
+                <!--<p class="time">2011年10月5日</p>-->
+                <!--<p class="content">史蒂夫·乔布斯去世</p>-->
+              <!--</TimelineItem>-->
+            <!--</Timeline>-->
+
+            <section id="cd-timeline" class="cd-container">
+              <div class="cd-timeline-block">
+                <div class="cd-timeline-img cd-picture">
+                  <img src="img/cd-icon-picture.svg" alt="Picture">
+                </div>
+
+                <div class="cd-timeline-content">
+                  <h2>HTML5+CSS3实现的响应式垂直时间轴</h2>
+                  <span class="cd-date">2014-12-05</span>
+                  <p>网页时间轴一般用于展示以时间为主线的事件，如企业网站常见的公司发展历程等。本文将给大家介绍一款基于HTML5和CSS3的漂亮的垂直时间轴，它可以响应页面布局，适用于HTML5开发的PC和移动手机WEB应用。</p>
+                  <a href="http://www.helloweba.com/view-blog-285.html" class="cd-read-more" target="_blank">阅读全文</a>
+                </div>
+              </div>
+              <div class="cd-timeline-block">
+                <div class="cd-timeline-img cd-movie">
+                  <img src="img/cd-icon-movie.svg" alt="Movie">
+                </div>
+
+                <div class="cd-timeline-content">
+                  <h2>jQuery+PHP动态数字展示效果</h2>
+                  <p>我们在一些应用中需要动态展示数据，比如当前在线人数，当前交易总额，当前汇率等等，前端页面需要实时刷新获取最新数据。本文将结合实例给大家介绍使用jQuery和PHP来实现动态数字展示效果。</p>
+                  <a href="http://www.helloweba.com/view-blog-284.html" class="cd-read-more" target="_blank">阅读全文</a>
+                </div>
+              </div>
+              <div class="cd-timeline-block">
+                <div class="cd-timeline-img cd-picture">
+                  <img src="img/cd-icon-picture.svg" alt="Picture">
+                </div>
+
+                <div class="cd-timeline-content">
+                  <h2>PHP操作Session和Cookie</h2>
+                  <p>我们跟踪用户信息时需要用到Session和Cookie，比如用户登录验证、记录用户浏览历史，存储购物车数据，限制用户会话有效时间等。今天我们来了解下PHP是如何操作Session和Cookie的。</p>
+                  <a href="http://www.helloweba.com/view-blog-283.html" class="cd-read-more" target="_blank">阅读全文</a>
+                </div>
+              </div>
+              <div class="cd-timeline-block">
+                <div class="cd-timeline-img cd-movie">
+                  <img src="img/cd-icon-movie.svg" alt="Movie">
+                </div>
+
+                <div class="cd-timeline-content">
+                  <h2>jQuery数字加减插件</h2>
+                  <p>我们在网上购物提交订单时，在网页上一般会有一个选择数量的控件，要求买家选择购买商品的件数，开发者会把该控件做成可以通过点击实现加减等微调操作，当然也可以直接输入数字件数。本文将介绍常见的几种使用spinner数字微调器来实现数字加减的功能的方法。</p>
+                  <a href="http://www.helloweba.com/view-blog-282.html" class="cd-read-more" target="_blank">阅读全文</a>
+                </div>
+              </div>
+              <div class="cd-timeline-block">
+                <div class="cd-timeline-img cd-movie">
+                  <img src="img/cd-icon-location.svg" alt="Location">
+                </div>
+
+                <div class="cd-timeline-content">
+                  <h2>收集整理的非常有用的PHP函数</h2>
+                  <p>项目中经常会需要一些让人头疼的函数，作为开发者应该整理一个自己的函数库，在需要之时复制过来即可。本文作者收集整理数十个PHP项目中常用的函数，保证能正常运行，你只要复制粘贴到你项目中即可。</p>
+                  <a href="http://www.helloweba.com/view-blog-281.html" class="cd-read-more" target="_blank">阅读全文</a>
+                </div>
+              </div>
+            </section>
+
+
           </el-card>
         </transition>
       </el-col>
@@ -233,6 +300,7 @@
       }
       return {
         activeDate:"",
+        activeMeetingDate:"",
         on: true,
         createClues:false,
         customerDialog:false,
@@ -251,6 +319,7 @@
           visitors:[
             {name:"",time:""},
           ],
+          meetingType:"main",
         },
         options: [
           {value: '选项1', label: '全款会员'},
@@ -262,12 +331,16 @@
         showCalendar:true,
         meetingData:[
           {
-            date:"2018-1-1",
+            startDate:"2018-1-1",
+            endDate:"2018-1-3",
+            date:"2018-1-20",
             detail:"会议详情",
             type:"main",
           },
           {
-            date:"2018-1-2",
+            startDate:"2018-1-6",
+            endDate:"2018-1-9",
+            date:"2018-1-21",
             detail:"会议详情",
             type:"branch",
           },
@@ -416,25 +489,30 @@
     methods: {
       clickDay:function(date){
         let hasMeeting = false;
-        for(let i=0;i<this.meetingData.length;i++){
-          if(this.meetingData[i].date == date){
-            hasMeeting = true;break;
-          }
-        }
-        if(hasMeeting){
+        if(date.meeting){
           this.on = true;
+          this.activeMeetingDate = date.day;
         }else{
-          this.activeDate = date;
+          this.activeDate = date.day;
           this.meetingDialog = true;
+          this.meetingTime = [date.date,new Date(date.date.getTime() + 1000*60*60*24*3)];
         }
       },
       addMeeting:function(){
         this.meetingData.push({
-          date:this.activeDate,
-          detail:"会议详情"
+          startDate:this.formatDate(this.meetingTime[0]),
+          endDate:this.formatDate(this.meetingTime[1]),
+          detail:"会议详情",
+          type:this.meetingForm.meetingType
         });
         this.meetingDialog = false;
         this.on = true;
+      },
+      formatDate: function(date){
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        var d = date.getDate();
+        return y+"-"+m+"-"+d
       },
     },
     created: function(){
@@ -445,6 +523,7 @@
 </script>
 
 <style scoped>
+  @import '../../style/timeline.css';
   .meeting-container{
     padding-top:50px;
     margin-left:360px;
@@ -463,7 +542,7 @@
     background-color: #FF6666;
   }
   .meeting-container .branch{
-    background-color: #99CC66;
+    background-color: #00B8EC;
   }
   .meeting-container .meeting-text{
     margin-left:50px;

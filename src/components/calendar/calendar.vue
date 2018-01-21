@@ -25,14 +25,35 @@
       <ul class="days">
         <li @click="pick(day)" v-for="day in days">
           <!--本月-->
-          <span v-if="day.getMonth()+1 != currentMonth" class="other-month">{{ day.getDate() }}</span>
+          <span v-if="day.date.getMonth()+1 != currentMonth" class="other-month">{{ day.date.getDate() }}</span>
           <span v-else>
             <!--今天-->
             <!--<span v-if="day.getFullYear() == new Date().getFullYear() && day.getMonth() == new Date().getMonth() && day.getDate() == new Date().getDate()"-->
                   <!--:class="[meetingDate.indexOf(currentYear + '-' + currentMonth + '-' + day.getDate()) != -1 ? 'meeting today' : 'today']">{{ day.getDate() }}</span>-->
-            <span v-if="mainMeetingDate.indexOf(currentYear + '-' + currentMonth + '-' + day.getDate()) != -1" class="meeting-main">{{ day.getDate() }}</span>
-            <span v-else-if="branchMeetingDate.indexOf(currentYear + '-' + currentMonth + '-' + day.getDate()) != -1" class="meeting-branch">{{ day.getDate() }}</span>
-            <span v-else>{{ day.getDate() }}</span>
+
+            <!--<span v-if="mainMeetingDate.indexOf(currentYear + '-' + currentMonth + '-' + day.getDate()) != -1" class="meeting-main">{{ day.getDate() }}</span>-->
+            <!--<span v-else-if="branchMeetingDate.indexOf(currentYear + '-' + currentMonth + '-' + day.getDate()) != -1" class="meeting-branch">-->
+              <!--<el-tooltip effect="dark" content="提示文字" placement="bottom">-->
+                <!--<span>{{ day.getDate() }}</span>-->
+              <!--</el-tooltip>-->
+            <!--</span>-->
+            <!--<span v-else>{{ day.getDate() }}</span>-->
+
+            <template v-if="day.meeting">
+              <span v-if="day.meeting.type == 'main'" :class="[Number(day.date.getDate()) >= 10 ? 'meeting-main small-active' : 'meeting-main']">
+                <el-tooltip effect="dark" :content="day.meeting.detail" placement="bottom">
+                  <span>{{ day.date.getDate() }}</span>
+                </el-tooltip>
+              </span>
+              <span v-else-if="day.meeting.type == 'branch'" :class="[Number(day.date.getDate()) >= 10 ? 'meeting-branch small-active' : 'meeting-branch']">
+                <el-tooltip effect="dark" :content="day.meeting.detail" placement="bottom">
+                  <span>{{ day.date.getDate() }}</span>
+                </el-tooltip>
+              </span>
+            </template>
+            <template v-else>
+              <span>{{ day.date.getDate() }}</span>
+            </template>
           </span>
         </li>
       </ul>
@@ -64,17 +85,14 @@
     },
     methods: {
       initMeetingDate:function(data){
-        this.mainMeetingDate = [];
-        this.branchMeetingDate = [];
-        for(var i=0;i<data.length;i++){
-          if(data[i].type == 'main'){
-            this.mainMeetingDate.push(data[i].date);
-          }else{
-            this.branchMeetingDate.push(data[i].date);
+        var newDates = this.dataScope(data[data.length-1].startDate,data[data.length-1].endDate);
+        for(var i=0;i<this.days.length;i++){
+          var day = this.formatDate(this.days[i].date.getFullYear(),this.days[i].date.getMonth() + 1,this.days[i].date.getDate());
+          if(newDates.indexOf(day) != -1){
+            this.days[i].meeting = data[data.length-1];
+            console.log(this.days[i]);
           }
         }
-        console.log(data);
-        console.log(this.mainMeetingDate);
       },
       initData: function(cur) {
         var date;
@@ -94,21 +112,40 @@
         this.days.length = 0;
         // 今天是周日，放在第一行第7个位置，前面6个
         for (var i = this.currentWeek - 1; i >= 0; i--) {
+//          var d = new Date(str);
+//          d.setDate(d.getDate() - i);
+//          this.days.push(d);
           var d = new Date(str);
           d.setDate(d.getDate() - i);
-          this.days.push(d);
+          var dString = this.formatDate(d.getFullYear(),d.getMonth() + 1,d.getDate());
+          var date = {date:d};
+          for(var j=0;j<this.meetingData.length;j++){
+            if(this.dataScope(this.meetingData[j].startDate,this.meetingData[j].endDate).indexOf(dString) != -1){
+              date.meeting = this.meetingData[j];
+            }
+          }
+          this.days.push(date);
         }
         for (var i = 1; i <= 35 - this.currentWeek; i++) {
+//          var d = new Date(str);
+//          d.setDate(d.getDate() + i);
+//          this.days.push(d);
           var d = new Date(str);
           d.setDate(d.getDate() + i);
-          this.days.push(d);
+          var dString = this.formatDate(d.getFullYear(),d.getMonth() + 1,d.getDate());
+          var date = {date:d};
+          for(var j=0;j<this.meetingData.length;j++){
+            if(this.dataScope(this.meetingData[j].startDate,this.meetingData[j].endDate).indexOf(dString) != -1){
+              date.meeting = this.meetingData[j];
+            }
+          }
+          this.days.push(date);
         }
       },
       pick: function(date) {
         //点击天
-        var day = this.formatDate( date.getFullYear() , date.getMonth() + 1, date.getDate());
-        this.$emit('click-day',day);
-//        alert(this.formatDate( date.getFullYear() , date.getMonth() + 1, date.getDate()));
+        date.day = this.formatDate( date.date.getFullYear() , date.date.getMonth() + 1, date.date.getDate());
+        this.$emit('click-day',date);
       },
       pickPre: function(year, month) {
         // setDate(0); 上月最后一天
@@ -136,6 +173,39 @@
         var d = day;
         if(d<10) d = d;
         return y+"-"+m+"-"+d
+      },
+      dataScope:function(value1, value2) {
+        var getDate = function(str) {
+          var tempDate = new Date();
+          var list = str.split("-");
+          tempDate.setFullYear(list[0]);
+          tempDate.setMonth(list[1] - 1);
+          tempDate.setDate(list[2]);
+          return tempDate;
+        }
+        var date1 = getDate(value1);
+        var date2 = getDate(value2);
+        if (date1 > date2) {
+          var tempDate = date1;
+          date1 = date2;
+          date2 = tempDate;
+        }
+        var dateArr = [];
+        dateArr.push(date1.getFullYear() + "-" + (date1.getMonth() + 1) + "-" + date1.getDate().toString());
+        date1.setDate(date1.getDate() + 1);
+        var i = 1;
+        while (!(date1.getFullYear() == date2.getFullYear()
+        && date1.getMonth() == date2.getMonth() && date1.getDate() == date2
+          .getDate())) {
+          var dayStr = date1.getDate().toString();
+          dateArr[i] = date1.getFullYear() + "-" + (date1.getMonth() + 1) + "-"
+            + dayStr;
+          i++;
+          // document.write(dateArr[i] + "<br>");
+          date1.setDate(date1.getDate() + 1);
+        }
+        dateArr.push(date2.getFullYear() + "-" + (date2.getMonth() + 1) + "-" + date2.getDate().toString());
+        return dateArr;
       },
     },
     created: function() {
@@ -254,7 +324,7 @@
   }
 
   .days li .today {
-    padding: 6px 6px;
+    padding: 6px 10px;
     border-radius: 50%;
     background: #00B8EC;
     color: #fff;
@@ -272,11 +342,18 @@
   .meeting-main{
     padding: 6px 10px;
     border-radius: 50%;
-    border:1px solid #FF6666;
+    /*border:1px solid #FF6666;*/
+    background: #FF6666;
+    color: #fff;
   }
   .meeting-branch{
     padding: 6px 10px;
     border-radius: 50%;
-    border:1px solid #99CC66;
+    /*border:1px solid #99CC66;*/
+    background: #00B8EC;
+    color: #fff;
+  }
+  .small-active{
+    padding: 6px 6px !important;
   }
 </style>
