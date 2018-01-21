@@ -79,7 +79,8 @@
               </el-select>
             </el-form-item>
             <el-form-item label="">
-              <el-button size="mini" @click="customerShowDetail = !customerShowDetail">展开完善更多信息</el-button>
+              <el-button v-if="customerShowDetail == false" size="mini" @click="customerShowDetail = true">展开完善更多信息</el-button>
+              <el-button v-else size="mini" @click="customerShowDetail = false">收起完善更多信息</el-button>
             </el-form-item>
             <template v-if="customerShowDetail">
               <el-form-item label="性别">
