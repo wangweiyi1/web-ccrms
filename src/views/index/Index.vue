@@ -19,29 +19,140 @@
           <el-button type="primary" @click="createClues = false">确 定</el-button>
         </span>
       </el-dialog>
-      <!--新建客户弹窗-->
-      <el-dialog title="新建客户" :visible.sync="customerDialog">
-        <el-form label-width="120px">
-          <el-form-item label="姓名">
-            <el-input style="width:200px;"></el-input>
-          </el-form-item>
-          <el-form-item label="电话号">
-            <el-input style="width:200px;"></el-input>
-          </el-form-item>
-          <el-form-item label="客户等级">
-            <el-select v-model="customerType" placeholder="请选择">
-              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
+      <!--写跟进弹窗-->
+      <el-dialog title="写跟进"  width="60%" :visible.sync="followDialog">
+        <el-row>
+          <el-col :span="12">
+            <el-select v-model="followType" placeholder="请选择">
+              <el-option key="1" label="电话" value="1"></el-option>
+              <el-option key="2" label="上门拜访" value="2"></el-option>
             </el-select>
-          </el-form-item>
-          <el-form-item label="参会次数">
-            <el-input style="width:200px;"></el-input>
+          </el-col>
+          <el-col :span="12" style="text-align: right;">
+            <el-date-picker v-model="date1" style="width:200px;" type="datetime" placeholder="选择日期时间">
             </el-date-picker>
-          </el-form-item>
-        </el-form>
+          </el-col>
+          <el-col :span="24" style="margin-top:10px;">
+            <el-input type="textarea" :rows="4" placeholder="请输入内容"></el-input>
+          </el-col>
+          <el-col :span="12" style="margin-top:10px;">
+            <el-col :span="6">
+              客户
+            </el-col>
+            <el-col :span="18">
+              <el-input v-model="followName" disabled style="width:200px;"></el-input>
+            </el-col>
+          </el-col>
+          <el-col :span="12" style="text-align: right;margin-top:10px;">
+            <el-col :span="6">
+              下次跟进时间
+            </el-col>
+            <el-col :span="18">
+              <el-date-picker v-model="date1" style="width:200px;" type="datetime" placeholder="选择日期时间">
+              </el-date-picker>
+            </el-col>
+          </el-col>
+        </el-row>
         <span slot="footer" class="dialog-footer">
-          <el-button @click="customerDialog = false">取 消</el-button>
-          <el-button type="primary" @click="customerDialog = false">确 定</el-button>
+          <el-button @click="followDialog = false">取 消</el-button>
+          <el-button type="primary" @click="followDialog = false">保 存</el-button>
+        </span>
+      </el-dialog>
+      <!--新建客户弹窗-->
+      <el-dialog title="新建客户" width="60%" :visible.sync="customerDialog">
+        <el-steps :active="customerStep" finish-status="success" align-center>
+          <el-step title="完善客户信息"></el-step>
+          <el-step title="完善客户公司信息"></el-step>
+        </el-steps>
+        <template v-if="customerStep == 0">
+          <el-form label-width="120px">
+            <el-form-item label="姓名">
+              <el-input style="width:200px;"></el-input>
+            </el-form-item>
+            <el-form-item label="联系电话">
+              <el-input style="width:200px;"></el-input>
+            </el-form-item>
+            <el-form-item label="类型">
+              <el-select v-model="customerType" placeholder="请选择">
+                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="">
+              <el-button size="mini" @click="customerShowDetail = !customerShowDetail">展开完善更多信息</el-button>
+            </el-form-item>
+            <template v-if="customerShowDetail">
+              <el-form-item label="性别">
+                <el-input style="width:200px;"></el-input>
+              </el-form-item>
+              <el-form-item label="身份证">
+                <el-input style="width:200px;"></el-input>
+              </el-form-item>
+              <el-form-item label="EMail">
+                <el-input style="width:200px;"></el-input>
+              </el-form-item>
+              <el-form-item label="QQ">
+                <el-input style="width:200px;"></el-input>
+              </el-form-item>
+              <el-form-item label="微信号">
+                <el-input style="width:200px;"></el-input>
+              </el-form-item>
+            </template>
+          </el-form>
+        </template>
+        <template v-else>
+          <el-form label-width="120px">
+            <el-form-item label="企业名称">
+              <el-input style="width:200px;"></el-input>
+            </el-form-item>
+            <el-form-item label="职位">
+              <el-select v-model="position" placeholder="请选择">
+                <el-option v-for="item in positionOptions" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="企业性质">
+              <el-select v-model="nature" placeholder="请选择">
+                <el-option v-for="item in natureOptions" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="所属行业">
+              <el-input style="width:200px;"></el-input>
+            </el-form-item>
+            <el-form-item label="创建年限">
+              <el-select v-model="createYear" placeholder="请选择">
+                <el-option v-for="item in createYearOptions" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="企业人数">
+              <el-input style="width:200px;"></el-input>
+            </el-form-item>
+            <el-form-item label="年利润额">
+              <el-input style="width:200px;"></el-input>
+            </el-form-item>
+            <el-form-item label="年营业额">
+              <el-input style="width:200px;"></el-input>
+            </el-form-item>
+            <el-form-item label="经营范围">
+              <el-input style="width:200px;"></el-input>
+            </el-form-item>
+            <el-form-item label="消费人群">
+              <el-input style="width:200px;"></el-input>
+            </el-form-item>
+            <el-form-item label="缺少的资源">
+              <el-input type="textarea" :rows="4" style="width:400px;"></el-input>
+            </el-form-item>
+            <el-form-item label="拥有的资源">
+              <el-input type="textarea" :rows="4" style="width:400px;"></el-input>
+            </el-form-item>
+          </el-form>
+        </template>
+        <span slot="footer" class="dialog-footer">
+          <el-button v-if="customerStep == 0" @click="customerStep = 1">下一步</el-button>
+          <el-button v-else @click="customerStep = 0">上一步</el-button>
+          <el-button type="primary" @click="customerDialog = false">完成</el-button>
         </span>
       </el-dialog>
       <!--新建会议弹窗-->
@@ -114,7 +225,7 @@
           <el-card class="box-card custom-card" :body-style="{ padding: '0' }">
             <div slot="header" class="clearfix card-header-custom">
               <h2>日程安排
-                <i class="el-icon-circle-plus click-icon"></i>
+                <i class="el-icon-circle-plus click-icon" @click="meetingDialog = true;meetingTime = [];"></i>
               </h2>
               <!--<el-button icon="el-icon-circle-plus">添加会议</el-button>-->
               <i class="el-icon-arrow-down card-icon" v-show="showCalendar" @click="showCalendar = false"></i>
@@ -131,6 +242,10 @@
               <div>
                 <div class="meeting-color branch"></div>
                 <div class="meeting-text">分公司会议</div>
+              </div>
+              <div>
+                <div class="meeting-color schedule"></div>
+                <div class="meeting-text">日程</div>
               </div>
             </div>
           </el-card>
@@ -165,7 +280,7 @@
           <el-card v-if="on" key="on" class="box-card custom-card" :body-style="{ position: 'relative' , paddingTop:'10px' }">
             <h2>
               会议安排 {{activeMeetingDate}}
-              <i class="el-icon-edit" style="cursor: pointer;"></i>
+              <!--<i class="el-icon-edit" style="cursor: pointer;"></i>-->
             </h2>
             <span class="lead">
               <img src="../../assets/icon/time.svg" width="15"/>&nbsp;2018-1-1 10:00<br>
@@ -202,89 +317,53 @@
             </el-row>
           </el-card>
           <el-card  v-else key="off" class="box-card custom-card" :body-style="{ position: 'relative' }">
-            <!--<Timeline pending>-->
-              <!--<TimelineItem>-->
-                <!--<p class="time">1976年</p>-->
-                <!--<p class="content">Apple I 问世</p>-->
-              <!--</TimelineItem>-->
-              <!--<TimelineItem>-->
-                <!--<p class="time">1984年</p>-->
-                <!--<p class="content">发布 Macintosh</p>-->
-              <!--</TimelineItem>-->
-              <!--<TimelineItem>-->
-                <!--<p class="time">2007年</p>-->
-                <!--<p class="content">发布 iPhone</p>-->
-              <!--</TimelineItem>-->
-              <!--<TimelineItem>-->
-                <!--<p class="time">2010年</p>-->
-                <!--<p class="content">发布 iPad</p>-->
-              <!--</TimelineItem>-->
-              <!--<TimelineItem>-->
-                <!--<p class="time">2011年10月5日</p>-->
-                <!--<p class="content">史蒂夫·乔布斯去世</p>-->
-              <!--</TimelineItem>-->
-            <!--</Timeline>-->
-
+            <div style="padding:10px 2em;position: relative;">
+              <h3>线索客户1</h3>
+              <el-button size="mini" style="position: absolute;top:0;right:2em;" type="primary" @click="followDialog = true">写跟进</el-button>
+            </div>
             <section id="cd-timeline" class="cd-container">
+
               <div class="cd-timeline-block">
                 <div class="cd-timeline-img cd-picture">
-                  <img src="img/cd-icon-picture.svg" alt="Picture">
+                  <img src="../../assets/icon/date.svg" alt="Picture">
                 </div>
-
-                <div class="cd-timeline-content">
-                  <h2>HTML5+CSS3实现的响应式垂直时间轴</h2>
-                  <span class="cd-date">2014-12-05</span>
-                  <p>网页时间轴一般用于展示以时间为主线的事件，如企业网站常见的公司发展历程等。本文将给大家介绍一款基于HTML5和CSS3的漂亮的垂直时间轴，它可以响应页面布局，适用于HTML5开发的PC和移动手机WEB应用。</p>
-                  <a href="http://www.helloweba.com/view-blog-285.html" class="cd-read-more" target="_blank">阅读全文</a>
+                <div class="cd-timeline-content time-date">
+                  1-20
                 </div>
               </div>
-              <div class="cd-timeline-block">
-                <div class="cd-timeline-img cd-movie">
-                  <img src="img/cd-icon-movie.svg" alt="Movie">
-                </div>
 
-                <div class="cd-timeline-content">
-                  <h2>jQuery+PHP动态数字展示效果</h2>
-                  <p>我们在一些应用中需要动态展示数据，比如当前在线人数，当前交易总额，当前汇率等等，前端页面需要实时刷新获取最新数据。本文将结合实例给大家介绍使用jQuery和PHP来实现动态数字展示效果。</p>
-                  <a href="http://www.helloweba.com/view-blog-284.html" class="cd-read-more" target="_blank">阅读全文</a>
-                </div>
-              </div>
               <div class="cd-timeline-block">
                 <div class="cd-timeline-img cd-picture">
-                  <img src="img/cd-icon-picture.svg" alt="Picture">
+                  <img src="../../assets/icon/phone-point.svg" alt="Picture">
                 </div>
-
                 <div class="cd-timeline-content">
-                  <h2>PHP操作Session和Cookie</h2>
-                  <p>我们跟踪用户信息时需要用到Session和Cookie，比如用户登录验证、记录用户浏览历史，存储购物车数据，限制用户会话有效时间等。今天我们来了解下PHP是如何操作Session和Cookie的。</p>
-                  <a href="http://www.helloweba.com/view-blog-283.html" class="cd-read-more" target="_blank">阅读全文</a>
+                  <h2>张三</h2>
+                  <p>进行了电话联系。</p>
+                  <span class="cd-date">写跟进时间 : 2018-1-21</span>
                 </div>
               </div>
+
               <div class="cd-timeline-block">
-                <div class="cd-timeline-img cd-movie">
-                  <img src="img/cd-icon-movie.svg" alt="Movie">
+                <div class="cd-timeline-img cd-picture">
+                  <img src="../../assets/icon/date.svg" alt="Picture">
                 </div>
-
-                <div class="cd-timeline-content">
-                  <h2>jQuery数字加减插件</h2>
-                  <p>我们在网上购物提交订单时，在网页上一般会有一个选择数量的控件，要求买家选择购买商品的件数，开发者会把该控件做成可以通过点击实现加减等微调操作，当然也可以直接输入数字件数。本文将介绍常见的几种使用spinner数字微调器来实现数字加减的功能的方法。</p>
-                  <a href="http://www.helloweba.com/view-blog-282.html" class="cd-read-more" target="_blank">阅读全文</a>
+                <div class="cd-timeline-content time-date">
+                  1-19
                 </div>
               </div>
+
               <div class="cd-timeline-block">
-                <div class="cd-timeline-img cd-movie">
-                  <img src="img/cd-icon-location.svg" alt="Location">
+                <div class="cd-timeline-img cd-picture">
+                  <img src="../../assets/icon/positioning.svg" alt="Picture">
                 </div>
-
                 <div class="cd-timeline-content">
-                  <h2>收集整理的非常有用的PHP函数</h2>
-                  <p>项目中经常会需要一些让人头疼的函数，作为开发者应该整理一个自己的函数库，在需要之时复制过来即可。本文作者收集整理数十个PHP项目中常用的函数，保证能正常运行，你只要复制粘贴到你项目中即可。</p>
-                  <a href="http://www.helloweba.com/view-blog-281.html" class="cd-read-more" target="_blank">阅读全文</a>
+                  <h2>李四</h2>
+                  <p>上门拜访了张总。</p>
+                  <span class="cd-date">写跟进时间 : 2018-1-12</span>
                 </div>
               </div>
+
             </section>
-
-
           </el-card>
         </transition>
       </el-col>
@@ -299,17 +378,22 @@
         Personnel.push({key:i,label:"客户"+i});
       }
       return {
+        customerStep:0,
+        customerShowDetail:false,
         activeDate:"",
         activeMeetingDate:"",
         on: true,
         createClues:false,
         customerDialog:false,
         meetingDialog:false,
+        followDialog:false,
         date1:'',
         meetingTime:'',
         customerType:"",
         personnel:Personnel,
         personnelValue:[],
+        followType:"1",
+        followName:"跟进客户1",
         activeMeeting:{
           date:"",
           detail:"",
@@ -322,10 +406,32 @@
           meetingType:"main",
         },
         options: [
-          {value: '选项1', label: '全款会员'},
+          {value: '选项1', label: '线索客户'},
           {value: '选项2', label: '期费会员'},
-          {value: '选项3', label: '龙弟子'},
-          {value: '选项4', label: '全球创办人'},
+          {value: '选项3', label: '全款会员'},
+          {value: '选项4', label: '龙弟子'},
+          {value: '选项5', label: '全球创办人'},
+        ],
+        position:"",
+        positionOptions:[
+          {value: '选项1', label: '董事长'},
+          {value: '选项2', label: '法人'},
+          {value: '选项3', label: '总经理'},
+          {value: '选项4', label: '其他'},
+        ],
+        nature:"",
+        natureOptions:[
+          {value: '选项1', label: '民营独资'},
+          {value: '选项2', label: '民营合资'},
+          {value: '选项3', label: '国有企业'},
+          {value: '选项4', label: '外资企业'},
+          {value: '选项5', label: '其他'},
+        ],
+        createYear:"",
+        createYearOptions:[
+          {value: '选项1', label: '3年以下'},
+          {value: '选项2', label: '3-8年'},
+          {value: '选项3', label: '8年以上'},
         ],
         value: [20, 50],
         showCalendar:true,
@@ -343,6 +449,13 @@
             date:"2018-1-21",
             detail:"会议详情",
             type:"branch",
+          },
+          {
+            startDate:"2018-1-11",
+            endDate:"2018-1-11",
+            date:"2018-1-21",
+            detail:"日程详情",
+            type:"schedule",
           },
         ],
         cluesData:[
@@ -543,6 +656,9 @@
   }
   .meeting-container .branch{
     background-color: #00B8EC;
+  }
+  .meeting-container .schedule{
+    background-color: #fe9223;
   }
   .meeting-container .meeting-text{
     margin-left:50px;

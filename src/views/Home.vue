@@ -2,7 +2,7 @@
   <el-row class="main">
     <el-col :span="24" class="header">
       <el-col :span="4" class="logo">
-        <img src="../assets/logo.png" height="50" alt="">
+        <img src="../assets/logo.png" height="30" alt="">
       </el-col>
       <el-col :span="14">
         <el-menu :default-active="$route.path" router class="el-menu-demo" mode="horizontal">
@@ -40,11 +40,13 @@
 
 <style scoped>
   .header{
+    position: fixed;
     background-color: white;
-    height:60px;
+    height:40px;
+    z-index:1000;
   }
   .header .el-col{
-    height:60px;
+    height:40px;
     border-bottom: solid 1px #e6e6e6;
   }
   .header .logo{
@@ -64,7 +66,12 @@
   .main .content-wrapper{
     position: relative;
     overflow: hidden;
-    padding:20px;
+    padding:10px;
+    margin-top:40px;
+  }
+  .el-menu--horizontal .el-menu-item{
+    height:40px;
+    line-height:40px;
   }
 </style>
 <style>

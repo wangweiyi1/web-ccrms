@@ -50,6 +50,11 @@
                   <span>{{ day.date.getDate() }}</span>
                 </el-tooltip>
               </span>
+              <span v-else-if="day.meeting.type == 'schedule'" :class="[Number(day.date.getDate()) >= 10 ? 'schedule small-active' : 'schedule']">
+                <el-tooltip effect="dark" :content="day.meeting.detail" placement="bottom">
+                  <span>{{ day.date.getDate() }}</span>
+                </el-tooltip>
+              </span>
             </template>
             <template v-else>
               <span>{{ day.date.getDate() }}</span>
@@ -175,6 +180,9 @@
         return y+"-"+m+"-"+d
       },
       dataScope:function(value1, value2) {
+        if(value1 == value2){
+          return [value1];
+        }
         var getDate = function(str) {
           var tempDate = new Date();
           var list = str.split("-");
@@ -351,6 +359,12 @@
     border-radius: 50%;
     /*border:1px solid #99CC66;*/
     background: #00B8EC;
+    color: #fff;
+  }
+  .schedule{
+    padding: 6px 10px;
+    border-radius: 50%;
+    background: #fe9223;
     color: #fff;
   }
   .small-active{
